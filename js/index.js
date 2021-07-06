@@ -1,3 +1,5 @@
+'use strict';
+
 const headerCityBtn = document.querySelector('.header__city-button');
 
 headerCityBtn.textContent = localStorage.getItem('location') || 'Ваш город?';
@@ -27,10 +29,11 @@ const disableScroll = () => {
 };
 
 const enableSkroll = () => {
+
     document.body.style.cssText = '';
     window.scroll({
         top: document.body.dbScrollY,
-    })
+    });
 };
 
 // Modal Window
@@ -38,7 +41,19 @@ const enableSkroll = () => {
 const subheaderCart = document.querySelector('.subheader__cart');
 const cartOverlay = document.querySelector('.cart-overlay');
 
+const onEscapePress = (event) => {
+
+    if (event.code === 'Escape') {
+
+        cartOverlay.classList.remove('cart-overlay-open');
+        window.removeEventListener('keydown', onEscapePress);
+        enableSkroll();
+        
+    }
+};
+
 const onOpenModal = () => {
+
     cartOverlay.classList.add('cart-overlay-open');
     window.addEventListener('keydown', onEscapePress);
     disableScroll();
@@ -48,22 +63,12 @@ const onCloseModal = (event) => {
     const target = event.target;
     enableSkroll();
 
-    if (target.classList.contains('cart__btn-close')
-        || target.classList.contains('cart-overlay')) {
+    if (target.classList.contains('cart__btn-close') || target.classList.contains('cart-overlay')) {
         cartOverlay.classList.remove('cart-overlay-open');
         window.removeEventListener('keydown', onEscapePress);
     }
 };
 
-const onEscapePress = (event) => {
-
-
-    if (event.code === 'Escape') {
-        cartOverlay.classList.remove('cart-overlay-open');
-        window.removeEventListener('keydown', onEscapePress);
-        enableSkroll();
-    }
-};
 
 subheaderCart.addEventListener('click', onOpenModal);
 cartOverlay.addEventListener('click', onCloseModal);
